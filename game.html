@@ -1,15 +1,37 @@
 <html>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script>
-        var canvas
-        var canvasContext
+        var canvas;
+        var canvasContext;
+        var ballX = 50;
+        var ballY
 
         window.onload = function() {
-            console.log("Start");
+            //console.log("Start");
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
+            
+            var fps = 30;
+            setInterval(drawAndMove, 1000/fps)
+        }
+
+        function drawAndMove() {
+            moveAll();
+            drawAll();
+        }
+
+        function moveAll() {
+            ballX = ballX + 30;
+        }
+
+        function drawAll() {
+            console.log(ballX)
             canvasContext.fillStyle = 'black';
             canvasContext.fillRect(0,0,canvas.width,canvas.height);
+            canvasContext.fillStyle = 'white';
+            canvasContext.fillRect(15,250,10,90);
+            canvasContext.fillStyle = 'blue';
+            canvasContext.fillRect(ballX,200,50,25);
         }
     </script>
 </html>
