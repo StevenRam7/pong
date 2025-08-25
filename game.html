@@ -4,7 +4,7 @@
         var canvas;
         var canvasContext;
         var ballX = 50;
-        var ballSpeedX = 5;
+        var ballSpeedX = 10;
         var ballY
 
         window.onload = function() {
@@ -23,17 +23,31 @@
 
         function moveAll() {
             ballX = ballX + ballSpeedX;
-            ballSpeedX + 1;
+            if (ballX >= canvas.width) {
+                ballSpeedX = -ballSpeedX;
+            }
+            if (ballX < 0) {
+                ballSpeedX = -ballSpeedX;
+            }
         }
 
         function drawAll() {
             console.log(ballX)
-            canvasContext.fillStyle = 'black';
-            canvasContext.fillRect(0,0,canvas.width,canvas.height);
-            canvasContext.fillStyle = 'white';
-            canvasContext.fillRect(15,250,10,90);
-            canvasContext.fillStyle = 'blue';
-            canvasContext.fillRect(ballX,200,50,25);
+            //background
+            colorRect(0,0,canvas.width,canvas.height,'black');
+
+            //left paddle
+            colorRect(15,250,10,90,'white');
+
+            //ball
+            canvasContext.beginPath()
+            colorRect(ballX,200,15,15,'green');
+            canvasContext.fill()
+        }
+
+        function colorRect(leftX,topY, width,height, drawColor) {
+            canvasContext.fillStyle = drawColor;
+            canvasContext.fillRect(leftX,topY, width,height);
         }
     </script>
 </html>
