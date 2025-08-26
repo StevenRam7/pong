@@ -5,7 +5,23 @@
         var canvasContext;
         var ballX = 50;
         var ballSpeedX = 10;
-        var ballY
+        var ballY = 50;
+        var ballSpeedY = 4;
+        var leftPaddleX
+        var leftPaddleY = 250;
+        var rightPaddleX
+        var rightPaddleY
+        const paddleHeight = 85;
+
+        function locateMouse(event) {
+            var rect = canvas.getBoundingClientRect();
+            var root = document.documentElement;
+            var mouseX = event.clientX - rect.left - root.scrollLeft;
+            var mouseY = event.clientY - rect.top - root.scrollTop;
+            return {
+                x:mouseX,y:mouseY
+            }
+        }
 
         window.onload = function() {
             //console.log("Start");
@@ -14,6 +30,12 @@
             
             var fps = 30;
             setInterval(drawAndMove, 1000/fps)
+
+            canvas.addEventListener('mousemove',
+                function(event) {
+                    var mouseLoc = locateMouse(event);
+                    leftPaddleY = mouseLoc.y-(paddleHeight/2);
+                });
         }
 
         function drawAndMove() {
@@ -23,25 +45,31 @@
 
         function moveAll() {
             ballX = ballX + ballSpeedX;
+            ballY = ballY + ballSpeedY;
             if (ballX >= canvas.width) {
                 ballSpeedX = -ballSpeedX;
             }
             if (ballX < 0) {
                 ballSpeedX = -ballSpeedX;
             }
+            if (ballY >= canvas.height) {
+                ballSpeedY = -ballSpeedY;
+            }
+            if (ballX < 0) {
+                ballSpeedY = -ballSpeedY;
+            }
         }
 
         function drawAll() {
-            console.log(ballX)
             //background
             colorRect(0,0,canvas.width,canvas.height,'black');
 
             //left paddle
-            colorRect(15,250,10,90,'white');
+            colorRect(15,leftPaddleY,10,90,'white');
 
             //ball
             canvasContext.beginPath()
-            colorRect(ballX,200,15,15,'green');
+            colorRect(ballX,ballY,15,15,'green');
             canvasContext.fill()
         }
 
