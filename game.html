@@ -10,8 +10,9 @@
         var leftPaddleX
         var leftPaddleY = 250;
         var rightPaddleX
-        var rightPaddleY
+        var rightPaddleY = 250;
         const paddleHeight = 85;
+        const paddleWidth = 10;
 
         function locateMouse(event) {
             var rect = canvas.getBoundingClientRect();
@@ -43,19 +44,38 @@
             drawAll();
         }
 
+        function ballReset() {
+            ballSpeedX = -ballSpeedX;
+            ballX = canvas.width/2;
+            ballY = canvas.height/2;
+        }
+
         function moveAll() {
             ballX = ballX + ballSpeedX;
             ballY = ballY + ballSpeedY;
-            if (ballX >= canvas.width) {
-                ballSpeedX = -ballSpeedX;
-            }
+            //if (ballX >= canvas.width) {
+            //    ballSpeedX = -ballSpeedX;
+            //}
             if (ballX < 0) {
-                ballSpeedX = -ballSpeedX;
+                if (ballY > leftPaddleY &&
+                    ballY < leftPaddleY+paddleHeight) {
+                        ballSpeedX = -ballSpeedX
+                    } else {
+                        ballReset();
+                    }
+            }
+            if (ballX > 800) {
+                if (ballY > rightPaddleY &&
+                    ballY < rightPaddleY+paddleHeight) {
+                        ballSpeedX = -ballSpeedX;
+                    } else {
+                        ballReset();
+                    }
             }
             if (ballY >= canvas.height) {
                 ballSpeedY = -ballSpeedY;
             }
-            if (ballX < 0) {
+            if (ballY < 0) {
                 ballSpeedY = -ballSpeedY;
             }
         }
@@ -65,7 +85,10 @@
             colorRect(0,0,canvas.width,canvas.height,'black');
 
             //left paddle
-            colorRect(15,leftPaddleY,10,90,'white');
+            colorRect(15,leftPaddleY,paddleWidth,90,'white');
+
+            //right paddle
+            colorRect(775,rightPaddleY,paddleWidth,90,'white');
 
             //ball
             canvasContext.beginPath()
