@@ -11,8 +11,10 @@
         var leftPaddleY = 250;
         var rightPaddleX
         var rightPaddleY = 250;
+        var displayWin = false;
         var p1Score = 0;
         var p2Score = 0;
+        const winScore = 3;
         const paddleHeight = 85;
         const paddleWidth = 10;
 
@@ -47,6 +49,12 @@
         }
 
         function ballReset() {
+            if (p1Score >= winScore || p2Score >= winScore) {
+                p1Score = 0;
+                p2Score = 0;
+                displayWin = true;
+            }
+
             ballSpeedX = -ballSpeedX;
             ballX = canvas.width/2;
             ballY = canvas.height/2;
@@ -62,6 +70,10 @@
         }
 
         function moveAll() {
+            if(displayWin) {
+                return;
+            }
+
             npcMovement();
 
             ballX += ballSpeedX;
@@ -73,18 +85,24 @@
                 if (ballY > leftPaddleY &&
                     ballY < leftPaddleY+paddleHeight) {
                         ballSpeedX = -ballSpeedX
+
+                        var deltaY = ballY - (rightPaddleY+(paddleHeight/2))
+                        ballSpeedY = deltaY * 0.10;
                     } else {
-                        ballReset();
                         p2Score += 1;
+                        ballReset();
                     }
             }
             if (ballX > 800) {
                 if (ballY > rightPaddleY &&
                     ballY < rightPaddleY+paddleHeight) {
                         ballSpeedX = -ballSpeedX;
+
+                        var deltaY = ballY - (leftPaddleY+(paddleHeight/2))
+                        ballSpeedY = deltaY * 0.10;
                     } else {
-                        ballReset();
                         p1Score += 1;
+                        ballReset();
                     }
             }
             if (ballY >= canvas.height) {
@@ -98,6 +116,12 @@
         function drawAll() {
             //background
             colorRect(0,0,canvas.width,canvas.height,'black');
+
+            if(displayWin) {
+                canvasContext.fillStyle = "white";
+                canvasContext.fillText("Click to Continue", 100, 100);
+                return;
+            }
 
             //left paddle
             colorRect(15,leftPaddleY,paddleWidth,90,'white');
