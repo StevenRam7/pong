@@ -14,7 +14,7 @@
         var displayWin = false;
         var p1Score = 0;
         var p2Score = 0;
-        const winScore = 3;
+        const winScore = 7;
         const paddleHeight = 85;
         const paddleWidth = 10;
 
@@ -28,6 +28,14 @@
             }
         }
 
+        function handleClick(event) {
+            if(displayWin) {
+                p1Score = 0;
+                p2Score = 0;
+                displayWin = false;
+            }
+        }
+
         window.onload = function() {
             //console.log("Start");
             canvas = document.getElementById('gameCanvas');
@@ -35,6 +43,8 @@
             
             var fps = 30;
             setInterval(drawAndMove, 1000/fps)
+
+            canvas.addEventListener('mousedown', handleClick)
 
             canvas.addEventListener('mousemove',
                 function(event) {
@@ -50,8 +60,6 @@
 
         function ballReset() {
             if (p1Score >= winScore || p2Score >= winScore) {
-                p1Score = 0;
-                p2Score = 0;
                 displayWin = true;
             }
 
@@ -78,9 +86,7 @@
 
             ballX += ballSpeedX;
             ballY += ballSpeedY;
-            //if (ballX >= canvas.width) {
-            //    ballSpeedX = -ballSpeedX;
-            //}
+
             if (ballX < 0) {
                 if (ballY > leftPaddleY &&
                     ballY < leftPaddleY+paddleHeight) {
@@ -113,15 +119,33 @@
             }
         }
 
+        function drawNet() {
+            for(var i=0; i<canvas.height; i+=40) {
+                colorRect(canvas.width/2-1,i,2,20,'white');
+            }
+        }
+
         function drawAll() {
             //background
             colorRect(0,0,canvas.width,canvas.height,'black');
 
             if(displayWin) {
                 canvasContext.fillStyle = "white";
-                canvasContext.fillText("Click to Continue", 100, 100);
+
+                if (p1Score >= winScore) {
+                    //console.log("left wins");
+                    canvasContext.fillText("Left Player Wins!", 350, 200);
+                } 
+                else if (p2Score >= winScore) {
+                    //console.log("right wins");
+                    canvasContext.fillText("Right Player Wins!", 350, 200);
+                }
+                canvasContext.fillStyle = "white";
+                canvasContext.fillText("Click to Continue", 350, 500);
                 return;
             }
+            //dashed line for net
+            drawNet();
 
             //left paddle
             colorRect(15,leftPaddleY,paddleWidth,90,'white');
